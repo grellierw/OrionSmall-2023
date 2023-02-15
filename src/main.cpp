@@ -1,6 +1,7 @@
 #include "main.h"
 #include "disks.hpp"
 #include "pros/adi.hpp"
+#include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "pros/rotation.hpp"
 #include "pros/rtos.h"
@@ -113,6 +114,7 @@ void initialize() {
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
+  pros::lcd::initialize();
 }
 
 
@@ -180,6 +182,7 @@ void autonomous() {
  */
 
 int timePressed = 0;
+
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
@@ -226,8 +229,8 @@ void opcontrol() {
     }
     
 
-  printf("Cata Angle: %d\n", cataRotation.get_angle());
-
+    printf("Cata Angle: %d\n", cataRotation.get_angle());
+    pros::lcd::print(3,"Catapult angle: %d\n",cataRotation.get_angle());
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
   }
