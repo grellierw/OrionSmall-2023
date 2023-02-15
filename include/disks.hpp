@@ -4,8 +4,7 @@
 #include "EZ-Template/PID.hpp"
 
 //Cata
-void pidCata();
-
+extern PID cataPID;
 
 
 //Helper

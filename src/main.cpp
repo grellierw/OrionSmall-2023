@@ -1,6 +1,9 @@
 #include "main.h"
+#include "disks.hpp"
 #include "pros/adi.hpp"
 #include "pros/misc.h"
+#include "pros/rotation.hpp"
+#include "pros/rtos.h"
 
 
 /////
@@ -13,9 +16,11 @@ pros::Motor Tintake(2);
 pros::Motor Bintake(15);
 pros::Motor Lcata(9,1);
 pros::Motor Rcata(10);
-//sensors
+//pistons
 pros::ADIDigitalOut LPistons(1);
 pros::ADIDigitalOut RPistons(2);
+//sensors
+pros::Rotation cataRotation(7);
 //controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
@@ -74,9 +79,14 @@ Drive chassis (
  */
 void initialize() {
   // Print our branding over your terminal :D
-  ez::print_ez_template();
+  //ez::print_ez_template();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
+
+
+  cataPID.set_constants(0.45);
+  cataRotation.reset_position();
+  
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
@@ -168,6 +178,8 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+int timePressed = 0;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
@@ -182,9 +194,7 @@ void opcontrol() {
     // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
     // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-    // . . .
-    // Put more user control code here!
-    // . . .
+  
     if(master.get_digital(DIGITAL_R1)){
       Bintake = -127;
       Tintake = -127;
@@ -194,15 +204,17 @@ void opcontrol() {
       Tintake = 0;
     }
 
-    if(master.get_digital(DIGITAL_R2)){
-      Lcata = 127;
-      Rcata = 127;
+    if(master.get_digital(DIGITAL_L2)){
+      setCata(127);
+      timePressed = pros::c::millis();
     }
-    else{
-      Lcata = 0;
-      Rcata = 0;
+    else if(pros::c::millis() > timePressed + 500){
+     cataPID.set_target(30);
+    setCata(cataPID.compute(cataRotation.get_angle()));
     }
-    
+  printf("Cata Angle: %d\n", cataRotation.get_angle());
+
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
-}
+  }
+

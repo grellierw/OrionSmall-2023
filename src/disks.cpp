@@ -2,9 +2,7 @@
 
 
 //Cata
-void pidCata(){
 
-}
 
 
 

@@ -91,6 +91,9 @@ extern pros::Motor Lcata;
 extern pros::Motor Bintake;
 extern pros::Motor Tintake;
 
+//Sensors
+
+
 //Definitions
 
 
