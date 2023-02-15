@@ -91,7 +91,7 @@ void initialize() {
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
-  chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  chassis.set_curve_default(5, 5); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
   exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
 
@@ -194,7 +194,7 @@ void opcontrol() {
     // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
     // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-  
+    //Intake
     if(master.get_digital(DIGITAL_R1)){
       Bintake = -127;
       Tintake = -127;
@@ -204,6 +204,18 @@ void opcontrol() {
       Tintake = 0;
     }
 
+    //Outtake
+    if(master.get_digital(DIGITAL_R2)){
+      Bintake = 127;
+      Tintake = 127;
+    }
+    else{
+      Bintake = 0;
+      Tintake = 0;
+    }
+
+
+    //Cata
     if(master.get_digital(DIGITAL_L2)){
       setCata(127);
       timePressed = pros::c::millis();
@@ -212,6 +224,8 @@ void opcontrol() {
      cataPID.set_target(30);
     setCata(cataPID.compute(cataRotation.get_angle()));
     }
+    
+
   printf("Cata Angle: %d\n", cataRotation.get_angle());
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
