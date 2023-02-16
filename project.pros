@@ -189,7 +189,8 @@
       }
     },
     "upload_options": {
-      "icon": "alien"
+      "icon": "alien",
+      "description": "Orion 15\""
     }
   }
 }

@@ -22,11 +22,15 @@ pros::ADIDigitalOut LPistons(1);
 pros::ADIDigitalOut RPistons(2);
 //sensors
 pros::Rotation cataRotation(7);
+pros::Optical rollerSense(1);
+
 //controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 
-PID liftPID{0.45, 0, 0, 0, "Lift"};
+
+PID cataPID{0.45, 0, 0, 0, "Cata"};
+
 // Chassis constructor
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
@@ -85,14 +89,14 @@ void initialize() {
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
 
-  cataPID.set_constants(0.45);
+  cataPID.set_constants(0.1, 0, 0.4);
   cataRotation.reset_position();
   
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
-  chassis.set_curve_default(5, 5); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  chassis.set_curve_default(0, 10); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
   exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
 
@@ -182,7 +186,7 @@ void autonomous() {
  */
 
 int timePressed = 0;
-
+pros::c::optical_rgb_s_t rollerRGB;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
@@ -201,36 +205,40 @@ void opcontrol() {
     if(master.get_digital(DIGITAL_R1)){
       Bintake = -127;
       Tintake = -127;
-    }
-    else{
-      Bintake = 0;
-      Tintake = 0;
-    }
-
-    //Outtake
-    if(master.get_digital(DIGITAL_R2)){
+    }//outtake
+    else if(master.get_digital(DIGITAL_L1)){
       Bintake = 127;
       Tintake = 127;
+    }//roller
+    else if(master.get_digital(DIGITAL_L2)){
+      Tintake = 60;
     }
-    else{
+
+    if(!(master.get_digital(DIGITAL_R1)||master.get_digital(DIGITAL_L1)||master.get_digital(DIGITAL_L2))){
       Bintake = 0;
       Tintake = 0;
     }
-
+    
 
     //Cata
-    if(master.get_digital(DIGITAL_L2)){
+    if(master.get_digital(DIGITAL_R2)){
       setCata(127);
       timePressed = pros::c::millis();
     }
     else if(pros::c::millis() > timePressed + 500){
-     cataPID.set_target(30);
+     cataPID.set_target(8400);
     setCata(cataPID.compute(cataRotation.get_angle()));
     }
+    else {
+      setCata(0);
+    }
+  
     
 
-    printf("Cata Angle: %d\n", cataRotation.get_angle());
-    pros::lcd::print(3,"Catapult angle: %d\n",cataRotation.get_angle());
+    rollerRGB = rollerSense.get_rgb();
+    pros::lcd::print(3,"Red: %lf\n",rollerRGB.red);
+    pros::lcd::print(5,"Blue: %lf\n",rollerRGB.blue);
+    pros::lcd::print(6,"Cata angle: %d\n",cataRotation.get_angle());
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
   }

@@ -4,13 +4,13 @@
 #include "EZ-Template/PID.hpp"
 
 //Cata
-extern PID cataPID;
+
 
 
 //Helper
 
 void setCata(int motorPower);
-
+bool rollerChange(char colour);
 
 
 
