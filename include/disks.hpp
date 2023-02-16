@@ -10,7 +10,7 @@
 //Helper
 
 void setCata(int motorPower);
-bool rollerChange(char colour);
+void rollerChange(char colour);
 
 
 

@@ -92,7 +92,8 @@ extern pros::Motor Bintake;
 extern pros::Motor Tintake;
 
 //Sensors
-
+extern pros::Optical rollerSense;
+extern pros::Rotation cataRotation;
 
 //Definitions
 

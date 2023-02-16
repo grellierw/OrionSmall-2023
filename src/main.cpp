@@ -22,7 +22,7 @@ pros::ADIDigitalOut LPistons(1);
 pros::ADIDigitalOut RPistons(2);
 //sensors
 pros::Rotation cataRotation(7);
-pros::Optical rollerSense(1);
+pros::Optical rollerSense(4);
 
 //controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -106,7 +106,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
+    Auton("Red Match Auto\n\n Start against the roller.", drive_example),
     Auton("Example Turn\n\nTurn 3 times.", turn_example),
     Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
     Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
@@ -165,8 +165,8 @@ void autonomous() {
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
-
-  ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
+  drive_example();
+ // ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 
 
@@ -195,6 +195,9 @@ void opcontrol() {
  
   while (true) {
 
+
+
+    rollerSense.set_led_pwm(100);
     //chassis.tank(); // Tank control
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade
     // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
