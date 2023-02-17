@@ -91,21 +91,33 @@ chassis.wait_drive();
 Bintake = 127;
 chassis.set_drive_pid(40, DRIVE_SPEED, true);
 chassis.wait_drive();
-Bintake = 0;
+
 chassis.set_turn_pid(0,TURN_SPEED);
 chassis.wait_drive();
-chassis.set_drive_pid(20,DRIVE_SPEED,true);
+chassis.set_drive_pid(50,DRIVE_SPEED,true);
+chassis.wait_drive();
+Bintake = 0;
+chassis.set_turn_pid(-42,TURN_SPEED);
+pros::c::delay(4000);
+Bintake = -127;
+Tintake = -127;
 
-/*
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
-  chassis.wait_drive();
+chassis.set_drive_pid(-5,DRIVE_SPEED,true);
+chassis.wait_drive();
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
-  chassis.wait_drive();
+chassis.set_turn_pid(45,TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(-15,DRIVE_SPEED,true);
+chassis.wait_drive();
+chassis.set_drive_pid(-18,20,true);
+chassis.wait_drive();
+pros::delay(1000);
+chassis.set_drive_pid(33,DRIVE_SPEED,true);
+chassis.wait_drive();
+chassis.set_turn_pid(-42,TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(5,DRIVE_SPEED,true);
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
-  chassis.wait_drive();
-  */
 }
 
 
