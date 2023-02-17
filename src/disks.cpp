@@ -2,7 +2,19 @@
 
 
 //Cata
+//auto
+PID acataPID{0.45, 0, 0, 0, "autoCata"};
 
+void cataAuto(double target) {
+  acataPID.set_target(target);
+  ez::exit_output exit = ez::RUNNING;
+  while (acataPID.exit_condition({Lcata, Rcata}, true) == ez::RUNNING) {
+    double output = acataPID.compute(cataRotation.get_angle());
+    setCata(output);
+    pros::delay(ez::util::DELAY_TIME);
+  }
+  setCata(0);
+}
 
 
 //Roller
