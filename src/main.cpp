@@ -56,7 +56,7 @@ Drive chassis (
   //    (or gear ratio of tracking wheel)
   // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
   // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-  ,0.6
+  ,1.667
 
   // Uncomment if using tracking wheels
   /*
@@ -187,6 +187,8 @@ void autonomous() {
 
 int timePressed = 0;
 pros::c::optical_rgb_s_t rollerRGB;
+bool toggle;
+
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
@@ -224,6 +226,7 @@ void opcontrol() {
     
 
     //Cata
+    
     if(master.get_digital(DIGITAL_R2)){
       setCata(127);
       timePressed = pros::c::millis();
@@ -236,7 +239,9 @@ void opcontrol() {
       setCata(0);
     }
   
-    
+ 
+
+
 
     rollerRGB = rollerSense.get_rgb();
     pros::lcd::print(3,"Red: %lf\n",rollerRGB.red);

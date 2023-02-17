@@ -47,7 +47,7 @@ void two_mogo_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 11, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 1, 0, 5, 0);
   chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
   chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
@@ -78,11 +78,23 @@ void drive_example() {
 
 
 //
-rollerChange('b');
-//
-chassis.set_turn_pid(90, 110);
+Tintake = 80;
+chassis.set_drive_pid(-2,80);
+pros::c::delay(75);
+Tintake = 0;
+pros::c::delay(100);
+chassis.set_drive_pid(3,DRIVE_SPEED,true);
 chassis.wait_drive();
-chassis.set_drive_pid(10, 110);
+//
+chassis.set_turn_pid(90, TURN_SPEED);
+chassis.wait_drive();
+Bintake = 127;
+chassis.set_drive_pid(40, DRIVE_SPEED, true);
+chassis.wait_drive();
+Bintake = 0;
+chassis.set_turn_pid(0,TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(20,DRIVE_SPEED,true);
 
 /*
   chassis.set_drive_pid(24, DRIVE_SPEED, true);
