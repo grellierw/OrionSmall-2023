@@ -70,6 +70,8 @@ void modified_exit_condition() {
 ///
 // Drive Example
 ///
+
+
 void drive_example() {
   // The first parameter is target inches
   // The second parameter is max speed the robot will drive at
@@ -77,15 +79,23 @@ void drive_example() {
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
 
 
-//
+  //
+
+pros::Task cataTask(cataAuto);
+
+
 Tintake = 80;
 chassis.set_drive_pid(-2,80);
 pros::c::delay(75);
 Tintake = 0;
 pros::c::delay(100);
+
 chassis.set_drive_pid(3,DRIVE_SPEED,true);
+
 chassis.wait_drive();
+
 //
+
 chassis.set_turn_pid(90, TURN_SPEED);
 chassis.wait_drive();
 Bintake = 127;
@@ -98,9 +108,18 @@ chassis.set_drive_pid(50,DRIVE_SPEED,true);
 chassis.wait_drive();
 Bintake = 0;
 chassis.set_turn_pid(-42,TURN_SPEED);
-pros::c::delay(4000);
+chassis.wait_drive();
+
+pros::c::delay(300);
+
+cataShoot(); 
+
+pros::c::delay(300);
+
 Bintake = -127;
-Tintake = -127;
+Tintake = -100;
+
+
 
 chassis.set_drive_pid(-5,DRIVE_SPEED,true);
 chassis.wait_drive();
@@ -118,6 +137,10 @@ chassis.set_turn_pid(-42,TURN_SPEED);
 chassis.wait_drive();
 chassis.set_drive_pid(5,DRIVE_SPEED,true);
 
+cataShoot();
+
+Boost.set_value(1);
+
 }
 
 
@@ -130,14 +153,13 @@ void turn_example() {
   // The second parameter is max speed the robot will drive at
 
 
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
+  pros::Task cataTask(cataAuto);
+  pros::c::task_delay(2000);
+  //cataShoot();
+  pros::c::delay(500);
+  
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
-  chassis.wait_drive();
 }
 
 

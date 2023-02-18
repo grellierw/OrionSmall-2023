@@ -18,8 +18,9 @@ pros::Motor Bintake(15);
 pros::Motor Lcata(9,1);
 pros::Motor Rcata(10);
 //pistons
-pros::ADIDigitalOut LPistons(1);
-pros::ADIDigitalOut RPistons(2);
+pros::ADIDigitalOut endPistons(6);
+
+pros::ADIDigitalOut Boost(7);
 //sensors
 pros::Rotation cataRotation(7);
 pros::Optical rollerSense(4);
@@ -82,16 +83,21 @@ Drive chassis (
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
+
 void initialize() {
   // Print our branding over your terminal :D
   //ez::print_ez_template();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
-
+  //pros::c::imu_reset(21); 
   cataPID.set_constants(0.1, 0, 0.4);
   cataRotation.reset_position();
   
+  endPistons.set_value(0);
+  Boost.set_value(0);
+
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
@@ -165,8 +171,8 @@ void autonomous() {
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
-  drive_example();
- // ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
+  //drive_example();
+ ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 
 
@@ -194,6 +200,7 @@ void opcontrol() {
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   Lcata.set_brake_mode(MOTOR_BRAKE_BRAKE);
   Rcata.set_brake_mode(MOTOR_BRAKE_BRAKE);
+  catahold = false;
  
   while (true) {
 
@@ -233,7 +240,7 @@ void opcontrol() {
     }
     else if(pros::c::millis() > timePressed + 500){
      cataPID.set_target(8400);
-    setCata(cataPID.compute(cataRotation.get_angle()));
+    setCata(abs(cataPID.compute(cataRotation.get_angle())));
     }
     else {
       setCata(0);

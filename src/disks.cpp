@@ -2,19 +2,37 @@
 
 
 //Cata
+bool catahold = true;
+bool cata_auto_shoot = false;
 //auto
-PID acataPID{0.45, 0, 0, 0, "autoCata"};
 
-void cataAuto(double target) {
-  acataPID.set_target(target);
-  ez::exit_output exit = ez::RUNNING;
-  while (acataPID.exit_condition({Lcata, Rcata}, true) == ez::RUNNING) {
-    double output = acataPID.compute(cataRotation.get_angle());
-    setCata(output);
-    pros::delay(ez::util::DELAY_TIME);
-  }
-  setCata(0);
+PID acataPID{0.1, 0, 0.4, 0, "autoCata"};
+
+void cataAuto(void) {
+  
+  while (catahold) {
+    acataPID.set_target(8400);
+    setCata(abs(acataPID.compute(cataRotation.get_angle())));
+    pros::c::delay(10);
+
+    if(cata_auto_shoot){
+      setCata(127);
+        pros::c::delay(150);
+        setCata(0);
+        cata_auto_shoot = false;
+
+    }
 }
+}
+    void cataShoot(){
+    pros::c::delay(1000);
+    cata_auto_shoot = true;
+    pros::c::delay(10);
+    cata_auto_shoot = false;
+    }
+
+   
+
 
 
 //Roller
