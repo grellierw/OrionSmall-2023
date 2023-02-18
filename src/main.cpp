@@ -112,9 +112,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("Red Match Auto\n\n Start against the roller.", drive_example),
-    Auton("Example Turn\n\nTurn 3 times.", turn_example),
-    Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
+    Auton("Red Match Auto\n\n Start against the roller.", red_match),
+    Auton("Skills\n\n Blah blah blah skills auto ", skills_1),
     Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
     Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
     Auton("Combine all 3 movements", combining_movements),
@@ -201,55 +200,72 @@ void opcontrol() {
   Lcata.set_brake_mode(MOTOR_BRAKE_BRAKE);
   Rcata.set_brake_mode(MOTOR_BRAKE_BRAKE);
   catahold = false;
- 
+  Boost.set_value(1);
   while (true) {
 
-
-
-    rollerSense.set_led_pwm(100);
-    //chassis.tank(); // Tank control
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-    // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
-    // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
-    // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
+
+
+
 
     //Intake
     if(master.get_digital(DIGITAL_R1)){
       Bintake = -127;
       Tintake = -127;
-    }//outtake
-    else if(master.get_digital(DIGITAL_L1)){
+    }
+    //outtake
+    else if(master.get_digital(DIGITAL_L2)){
       Bintake = 127;
       Tintake = 127;
-    }//roller
-    else if(master.get_digital(DIGITAL_L2)){
+    }
+    //roller
+    else if(master.get_digital(DIGITAL_L1)){
       Tintake = 60;
     }
-
-    if(!(master.get_digital(DIGITAL_R1)||master.get_digital(DIGITAL_L1)||master.get_digital(DIGITAL_L2))){
+    //Reset
+    else{
       Bintake = 0;
       Tintake = 0;
     }
     
+ 
 
-    //Cata
-    
+    //Cata PID
     if(master.get_digital(DIGITAL_R2)){
       setCata(127);
       timePressed = pros::c::millis();
     }
-    else if(pros::c::millis() > timePressed + 500){
+    else if(pros::c::millis() > timePressed + 500 && !toggle){
      cataPID.set_target(8400);
     setCata(abs(cataPID.compute(cataRotation.get_angle())));
+    }
+    //Cata Reverse
+    else if(master.get_digital(DIGITAL_B)){
+      setCata(-100);
     }
     else {
       setCata(0);
     }
+    //Turns off cata PID
+    if(master.get_digital(DIGITAL_A)){
+      toggle = toggle * -1;
+   }
   
- 
+   
+
+   //Endgame
+   if(master.get_digital(DIGITAL_UP)){
+    endPistons.set_value(1);
+   }
 
 
 
+
+
+
+
+
+    //LCD sensor data
     rollerRGB = rollerSense.get_rgb();
     pros::lcd::print(3,"Red: %lf\n",rollerRGB.red);
     pros::lcd::print(5,"Blue: %lf\n",rollerRGB.blue);
