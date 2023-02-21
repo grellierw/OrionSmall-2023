@@ -6,6 +6,9 @@ extern Drive chassis;
 
 void red_match();
 void skills_1();
+void test();
+
+
 void drive_and_turn();
 void wait_until_change_speed();
 void swing_example();

@@ -67,97 +67,231 @@ void modified_exit_condition() {
 
 
 
-///
-// Drive Example
-///
 
 
 void red_match() {
 
 
 
-  //
-
+//Starts cataTask to hold down catapult with PID
 pros::Task cataTask(cataAuto);
-
-
-Tintake = 80;
+pros::c::delay(500);
+//Roller flip & turn
+Tintake = 100;
 chassis.set_drive_pid(-2,80);
-pros::c::delay(75);
+pros::c::delay(200);
 Tintake = 0;
-pros::c::delay(100);
-
+pros::c::delay(300);
 chassis.set_drive_pid(3,DRIVE_SPEED,true);
-
 chassis.wait_drive();
-
-//
-
 chassis.set_turn_pid(90, TURN_SPEED);
 chassis.wait_drive();
+
+//Intake flipout & prevent intaking disks
 Bintake = 127;
+
+//Go to first shot
 chassis.set_drive_pid(40, DRIVE_SPEED, true);
 chassis.wait_drive();
-
 chassis.set_turn_pid(0,TURN_SPEED);
 chassis.wait_drive();
 chassis.set_drive_pid(50,DRIVE_SPEED,true);
 chassis.wait_drive();
 Bintake = 0;
-chassis.set_turn_pid(-42,TURN_SPEED);
+chassis.set_turn_pid(-45,TURN_SPEED);
 chassis.wait_drive();
 
-pros::c::delay(300);
+//Shoot
 
 cataShoot(); 
+pros::c::delay(800);
 
-pros::c::delay(300);
+
+//Intake 3 stack
 
 Bintake = -127;
 Tintake = -100;
 
+chassis.set_drive_pid(-6,DRIVE_SPEED,true);
+chassis.wait_drive();
 
+chassis.set_turn_pid(45,TURN_SPEED);
+chassis.wait_drive();
+
+chassis.set_drive_pid(-15,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_drive_pid(-14,20,true);
+chassis.wait_drive();
+pros::delay(1000);
+
+//Drive back to shooting position
+chassis.set_drive_pid(29,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_turn_pid(-45,TURN_SPEED);
+chassis.wait_drive();
+
+chassis.set_drive_pid(6,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+
+//Shoot
+pros::c::delay(250);
+cataShoot();
+pros::c::delay(800);
+
+//get out of the way
+Bintake = -127;
+Tintake = -100;
 
 chassis.set_drive_pid(-5,DRIVE_SPEED,true);
 chassis.wait_drive();
 
 chassis.set_turn_pid(45,TURN_SPEED);
 chassis.wait_drive();
-chassis.set_drive_pid(-15,DRIVE_SPEED,true);
-chassis.wait_drive();
-chassis.set_drive_pid(-18,20,true);
-chassis.wait_drive();
-pros::delay(1000);
-chassis.set_drive_pid(33,DRIVE_SPEED,true);
-chassis.wait_drive();
-chassis.set_turn_pid(-42,TURN_SPEED);
-chassis.wait_drive();
-chassis.set_drive_pid(5,DRIVE_SPEED,true);
 
-cataShoot();
+chassis.set_drive_pid(-20,DRIVE_SPEED,true);
+chassis.wait_drive();
 
+chassis.set_drive_pid(-10,20,true);
+chassis.wait_drive();
+//Release booster
 Boost.set_value(1);
 
 }
 
 
 
+
+
+
+
+
 ///
-// Turn Example
+// Skills Auto
 ///
 void skills_1() {
-  // The first parameter is target degrees
-  // The second parameter is max speed the robot will drive at
+  //Starts cataTask to hold down catapult with PID
+pros::Task cataTask(cataAuto);
+pros::c::delay(500);
+//Roller flip & turn
+Tintake = 100;
+chassis.set_drive_pid(-2,80);
+pros::c::delay(300);
+Tintake = 0;
+pros::c::delay(300);
+chassis.set_drive_pid(3,DRIVE_SPEED,true);
+chassis.wait_drive();
+chassis.set_turn_pid(90, TURN_SPEED);
+chassis.wait_drive();
+
+//Intake flipout & prevent intaking disks
+Bintake = -127;
+
+//Go to first shot
+chassis.set_drive_pid(40, DRIVE_SPEED, true);
+chassis.wait_drive();
+chassis.set_turn_pid(0,TURN_SPEED);
+chassis.wait_drive();
+chassis.set_drive_pid(50,DRIVE_SPEED,true);
+chassis.wait_drive();
+Bintake = 0;
+chassis.set_turn_pid(-45,TURN_SPEED);
+chassis.wait_drive();
+
+//Shoot
+
+cataShoot(); 
+pros::c::delay(800);
 
 
-  pros::Task cataTask(cataAuto);
-  pros::c::task_delay(2000);
-  //cataShoot();
-  pros::c::delay(500);
-  
+//Intake 3 stack
+
+Bintake = -127;
+Tintake = -100;
+
+chassis.set_drive_pid(-6,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_turn_pid(45,TURN_SPEED);
+chassis.wait_drive();
+
+chassis.set_drive_pid(-15,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_drive_pid(-14,20,true);
+chassis.wait_drive();
+pros::delay(1000);
+
+//Drive back to shooting position
+chassis.set_drive_pid(29,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_turn_pid(-45,TURN_SPEED);
+chassis.wait_drive();
+
+chassis.set_drive_pid(6,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+
+//Shoot
+pros::c::delay(250);
+cataShoot();
+pros::c::delay(800);
+
+//get out of the way
+Bintake = -127;
+Tintake = -100;
+
+chassis.set_drive_pid(-5,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_turn_pid(45,TURN_SPEED);
+chassis.wait_drive();
+
+chassis.set_drive_pid(-40,DRIVE_SPEED,true);
+chassis.wait_drive();
+
+chassis.set_turn_pid(25,TURN_SPEED);
+chassis.wait_drive();
+pros::c::delay(5000);
+endPistons.set_value(1);
+pros::c::delay(2000);
+//Release booster
+Boost.set_value(1);
+
 
 
 }
+
+
+void test(){
+  //pros::Task cataTask(cataAuto);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

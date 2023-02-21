@@ -1,15 +1,16 @@
 #include "main.h"
 
 
-//Cata
+//Vars
 bool catahold = true;
 bool cata_auto_shoot = false;
-//auto
-
 PID acataPID{0.1, 0, 0.4, 0, "autoCata"};
 
+
+//-------Auto Functions ----------
+
+//Catapult auto function for task
 void cataAuto(void) {
-  
   while (catahold) {
     acataPID.set_target(8400);
     setCata(abs(acataPID.compute(cataRotation.get_angle())));
@@ -17,26 +18,26 @@ void cataAuto(void) {
 
     if(cata_auto_shoot){
       setCata(127);
-        pros::c::delay(150);
+        pros::c::delay(200);
         setCata(0);
+        pros::delay(500);
         cata_auto_shoot = false;
 
     }
 }
 }
-    void cataShoot(){
+
+//Passes in var to shoot during task
+void cataShoot(){
     pros::c::delay(1000);
     cata_auto_shoot = true;
-    pros::c::delay(10);
-    cata_auto_shoot = false;
-    }
+ 
+}
 
    
 
 
-
-//Roller
-
+//Roller colour switch
 void rollerChange(char colour){
     rollerSense.set_led_pwm(100);
     pros::c::optical_rgb_s_t rollerColour;
@@ -56,7 +57,7 @@ void rollerChange(char colour){
 
 
 
-//Helper
+//Helper Functions
 
 void setCata(int motorPower){
     Rcata.move(motorPower);

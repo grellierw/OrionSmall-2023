@@ -86,8 +86,6 @@ Drive chassis (
 
 
 void initialize() {
-  // Print our branding over your terminal :D
-  //ez::print_ez_template();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
@@ -114,7 +112,7 @@ void initialize() {
   ez::as::auton_selector.add_autons({
     Auton("Red Match Auto\n\n Start against the roller.", red_match),
     Auton("Skills\n\n Blah blah blah skills auto ", skills_1),
-    Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
+    Auton("Test\n\n test.", test),
     Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
     Auton("Combine all 3 movements", combining_movements),
     Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
@@ -154,6 +152,8 @@ void competition_initialize() {
 
 
 
+
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -176,6 +176,11 @@ void autonomous() {
 
 
 
+
+
+
+
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -190,6 +195,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 
+
+//Op control Vars
 int timePressed = 0;
 pros::c::optical_rgb_s_t rollerRGB;
 bool toggle;
@@ -197,16 +204,13 @@ bool toggle;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  Lcata.set_brake_mode(MOTOR_BRAKE_BRAKE);
-  Rcata.set_brake_mode(MOTOR_BRAKE_BRAKE);
-  catahold = false;
-  Boost.set_value(1);
+  Lcata.set_brake_mode(MOTOR_BRAKE_COAST);
+  Rcata.set_brake_mode(MOTOR_BRAKE_COAST);
+  catahold = false;    //Kills the loop in the catahold task
+  Boost.set_value(1);  //Opens band boost
   while (true) {
 
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-
-
-
 
     //Intake
     if(master.get_digital(DIGITAL_R1)){
@@ -220,7 +224,7 @@ void opcontrol() {
     }
     //roller
     else if(master.get_digital(DIGITAL_L1)){
-      Tintake = 60;
+      Tintake = 127;
     }
     //Reset
     else{

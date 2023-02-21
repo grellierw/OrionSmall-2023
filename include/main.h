@@ -95,7 +95,9 @@ extern pros::Motor Tintake;
 extern pros::Optical rollerSense;
 extern pros::Rotation cataRotation;
 
+//Pistons
 extern pros::ADIDigitalOut Boost;
+extern pros::ADIDigitalOut endPistons;
 //Definitions
 
 
